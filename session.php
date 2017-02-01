@@ -10,23 +10,29 @@ class Session{
 			case '1':
 				session_start();
 				//Asigna la session con el nombre de la clase
-				$_SESSION[get_class($data)] = serialize($data); 
+				$_SESSION[get_class(func_get_arg(0))] = serialize(func_get_arg(0)); 
 				break;
-			case '1':
+			case '2':
 				session_start();
 				//Asigna la session con un nombre especificado por el usuario, y serializa el objeto
-				$_SESSION[$nombre] = serialize($data);
+				$_SESSION[func_get_arg(0)] = serialize(func_get_arg(1));
 				break;
 			
 			default:
-				echo "Error en minimo un argumento requerido";
+				echo "Error minimo un argumento requerido";
 				break;
 		}
 		
 
 	}
 	public function userdata($nombre){
-		session_start();
+		//session_start();
+		if(isset($_SESSION[$nombre])){
+			return unserialize($_SESSION[$nombre]);
+		}else{
+			session_start();
+			return unserialize($_SESSION[$nombre]);
+		}
 		//Retorna objeto deserializado
 		return unserialize($_SESSION[$nombre]);
 	}
@@ -41,7 +47,7 @@ class Session{
 		session_unset($_SESSION[$nombre]);
 	}
 	public function verify_session($nombre){
-		session_start();
+		//session_start();
 		//comprueba si una session existe
 		if(isset($_SESSION[$nombre])){
 			return true;
